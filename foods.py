@@ -163,6 +163,5 @@ def suggest_meals(
         "protein_per_100kcal", "carbs_per_100kcal", "fat_per_100kcal",
         "meal_kcal_target", "est_protein_g", "est_carbs_g", "est_fat_g", "score",
     ]
-    # ensure columns exist
     keep = [c for c in keep_cols if c in out.columns]
     return out[keep].head(topn).reset_index(drop=True)
