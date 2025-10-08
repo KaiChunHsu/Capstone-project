@@ -85,31 +85,6 @@ def logs_to_df(logs: List[Dict[str, Any]]) -> pd.DataFrame:
     return df.sort_values("date")
 
 
-def estimate_tdee_from_logs(df: pd.DataFrame, base_tdee_guess: int) -> Optional[int]:
-    if df.empty or "kcal_in" not in df or "weight_kg" not in df:
-        return None
-    df = df.dropna(subset=["kcal_in", "weight_kg"]).copy()
-    if len(df) < 10:
-        return None
-
-    df["kcal_in"] = df["kcal_in"].astype(float)
-    df["weight_kg"] = df["weight_kg"].astype(float)
-
-    df["kcal_in_7d"] = df["kcal_in"].rolling(7).sum()
-    df["wt_7d"] = df["weight_kg"].rolling(7).mean()
-    df["wt_7d_shift"] = df["wt_7d"].shift(-7)
-    df = df.dropna(subset=["kcal_in_7d", "wt_7d", "wt_7d_shift"])
-    if df.empty:
-        return None
-
-    delta_w = df["wt_7d_shift"].values - df["wt_7d"].values
-    rhs = df["kcal_in_7d"].values - 7700.0 * delta_w  # ≈ 7*TDEE_user
-    seven_tdee = float(np.mean(rhs))
-    tdee_est = seven_tdee / 7.0
-    tdee_est = max(base_tdee_guess * 0.7, min(base_tdee_guess * 1.3, tdee_est))
-    return int(round(tdee_est))
-
-
 def recommended_macros(profile: Dict[str, Any], kcal: int, goal: str = "fat_loss") -> Dict[str, int]:
     weight = float(profile.get("weight_kg") or 70)
 
