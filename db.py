@@ -27,10 +27,10 @@ class DB:
     def connect(self) -> sqlite3.Connection:
         con = sqlite3.connect(self.path)
         con.row_factory = sqlite3.Row
-        con.execute("PRAGMA foreign_keys=ON;")
+        con.execute("PRAGMA foreign_keys=ON;") # default is OFF should turn it on if FK needed
         return con
 
-# ---------- schema ----------
+    # ---------- schema ----------
     def init_schema(self) -> None:
         with self.connect() as con:
             con.executescript(
@@ -82,7 +82,7 @@ class DB:
                 """
             )
 
-# ---------- users & auth ----------
+    # ---------- users & auth ----------
     def create_user(self, email: str, password: str, name: str = "") -> Optional[str]:
         salt = os.urandom(16)
         pwd = _pbkdf2(password, salt)
@@ -92,7 +92,7 @@ class DB:
                     "INSERT INTO users(email, password_salt, password_hash, name) VALUES (?,?,?,?)",
                     (email, salt, pwd, name),
                 )
-                con.execute("INSERT INTO profiles(email) VALUES (?)", (email,))
+                con.execute("INSERT INTO profiles(email) VALUES (?)", (email,)) # set this email for tuple 
                 con.execute("INSERT INTO settings(email) VALUES (?)", (email,))
         except sqlite3.IntegrityError:
             return "This email has been registered."
@@ -114,7 +114,7 @@ class DB:
         with self.connect() as con:
             con.execute("UPDATE users SET name=? WHERE email=?", (name, email))
 
-# ---------- profile ----------
+    # ---------- profile ----------
     def get_profile(self, email: str) -> Dict[str, Any]:
         with self.connect() as con:
             row = con.execute("SELECT * FROM profiles WHERE email=?", (email,)).fetchone()
@@ -138,7 +138,7 @@ class DB:
                 (email, *vals),
             )
 
-# ---------- settings ----------
+    # ---------- settings ----------
     def get_settings(self, email: str) -> Dict[str, Any]:
         with self.connect() as con:
             row = con.execute("SELECT * FROM settings WHERE email=?", (email,)).fetchone()
@@ -165,7 +165,7 @@ class DB:
                 (email, unit, show_h, nudges),
             )
 
-# ---------- goals ----------
+    # ---------- goals ----------
     def get_goals(self, email: str) -> Dict[str, Any]:
         with self.connect() as con:
             row = con.execute("SELECT * FROM goals WHERE email=?", (email,)).fetchone()
@@ -190,7 +190,7 @@ class DB:
                 (email, *vals),
             )
 
-# ---------- logs ----------
+    # ---------- logs ----------
     def add_log(
         self,
         email: str,
