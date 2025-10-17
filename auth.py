@@ -1,9 +1,12 @@
-from __future__ import annotations
 import streamlit as st
 from db import DB
 from utils import validate_email, strong_password
 
 
+# https://docs.streamlit.io/develop/api-reference/layout/st.tabs 
+# got the reference from this website
+
+# Here I created two pages for login and register
 def render_auth(db: DB) -> None:
     st.title("HealthyLife — User Page")
     tab_login, tab_register = st.tabs(["Log in", "Registered"])
@@ -14,6 +17,7 @@ def render_auth(db: DB) -> None:
             pw = st.text_input("Password", type="password")
             ok = st.form_submit_button("Log in")
         if ok:
+            # strip() will delete the spaces
             email_n = (email or "").lower().strip()
             if db.verify_user(email_n, pw):
                 st.session_state.current_user = email_n
@@ -29,10 +33,12 @@ def render_auth(db: DB) -> None:
             pw = st.text_input("Password (at least 8 characters, including words and numbers)", type="password")
             ok = st.form_submit_button("Create an Account")
         if ok:
+            # check from db.py of create_user
             email_n = (email or "").lower().strip()
             if not validate_email(email_n):
                 st.error("Please enter a valid email address.")
             else:
+                # check the password meet the validation
                 ok_pw, why = strong_password(pw)
                 if not ok_pw:
                     st.error(why)
