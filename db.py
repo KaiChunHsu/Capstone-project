@@ -28,7 +28,7 @@ class DB:
 
     def connect(self) -> sqlite3.Connection:
         # create connection, use FK to check 
-        con = sqlite3.connect(self.path)
+        con = sqlite3.connect(self.path) # check row[email]
         con.row_factory = sqlite3.Row
         con.execute("PRAGMA foreign_keys=ON;") # default is OFF should turn it on if FK needed
         return con
@@ -226,7 +226,7 @@ class DB:
                 (email, *vals),
             )
 
-# logs (for daily record)
+# logs (for daily record
     def add_log(
         self,
         email: str,
