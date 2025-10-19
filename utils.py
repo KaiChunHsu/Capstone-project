@@ -10,7 +10,6 @@ def validate_email(email: str) -> bool:
     # check email format is valid or not
     return bool(re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", email or ""))
 
-
 def strong_password(pw: str) -> Tuple[bool, str]:
     if not pw or len(pw) < 8:
         return False, "At least 8 characters."
