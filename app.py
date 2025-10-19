@@ -42,6 +42,7 @@ if st.session_state.current_user is None:
 
 email = st.session_state.current_user
 st.sidebar.write(f"Logged in: **{email}**")
+
 # https://docs.streamlit.io/develop/api-reference/widgets/st.radio
 action = st.sidebar.radio("Page", ["Personal Info/Goals", "Log out"], index=0)
 if action == "Log out":
