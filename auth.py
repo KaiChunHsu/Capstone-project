@@ -4,7 +4,7 @@ from utils import validate_email, strong_password
 
 
 # https://docs.streamlit.io/develop/api-reference/layout/st.tabs 
-# got the reference from this website
+# got the reference from this website 
 
 # Here I created two pages for login and register
 def render_auth(db: DB) -> None:
