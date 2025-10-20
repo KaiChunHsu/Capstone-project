@@ -8,3 +8,5 @@ For the most of the part, the app file which run the UI and generate all the fun
 My goal for this app is providing the users who is busy on their academic/work. This opportunity is going to help them reduce their time to put the data on the sheet and auto generate the daily goal.
 
 Although I placed all the files separately in this dashboard, I also created the healthylife_app package, which includes the default file for food recommendations, making it easier to download all the files to save time.
+
+When run the code: just download the package and pop up the terminal and type the "streamlit run app.py".
